@@ -16,15 +16,15 @@
  * under the License.
  */
 
-use std::sync::Arc;
+use crate::http::http_server::CompioSocketAddr;
+use crate::http::shared::AppState;
 use axum::body::Body;
 use axum::extract::{ConnectInfo, State};
 use axum::http::{Request, StatusCode};
 use axum::middleware::Next;
 use axum::response::Response;
 use iggy_common::TransportProtocol;
-use crate::http::http_server::CompioSocketAddr;
-use crate::http::shared::AppState;
+use std::sync::Arc;
 
 pub async fn manage_clients(
     State(state): State<Arc<AppState>>,
@@ -34,7 +34,10 @@ pub async fn manage_clients(
 ) -> Result<Response, StatusCode> {
     // add client
     let addr = addr.0;
-    let session = state.shard.shard().add_client(&addr, TransportProtocol::Http);
+    let session = state
+        .shard
+        .shard()
+        .add_client(&addr, TransportProtocol::Http);
     let client_id = session.client_id;
     println!(">>> before: {:?}, {:?}", request, addr);
 
@@ -43,7 +46,8 @@ pub async fn manage_clients(
 
     let _ = compio::runtime::spawn(async move {
         state.shard.shard().delete_client(client_id).await;
-    }).await;
+    })
+    .await;
 
     // remove client
     println!(">>> after");

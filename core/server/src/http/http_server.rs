@@ -107,7 +107,10 @@ pub async fn start_http_server(
             config.max_request_size.as_bytes_u64() as usize,
         ))
         .layer(middleware::from_fn_with_state(app_state.clone(), jwt_auth))
-        .layer(middleware::from_fn_with_state(app_state.clone(), manage_clients));
+        .layer(middleware::from_fn_with_state(
+            app_state.clone(),
+            manage_clients,
+        ));
 
     if config.cors.enabled {
         app = app.layer(configure_cors(config.cors)?);
