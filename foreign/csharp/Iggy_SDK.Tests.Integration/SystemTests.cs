@@ -44,7 +44,7 @@ public class SystemTests
         {
             client.ClientId.ShouldNotBe(0u);
             client.Address.ShouldNotBeNullOrEmpty();
-            client.Transport.ShouldBe(Protocol.Tcp);
+            client.Transport.ShouldBe(protocol);
         }
     }
 
