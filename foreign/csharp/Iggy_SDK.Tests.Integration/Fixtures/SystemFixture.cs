@@ -46,7 +46,7 @@ public class SystemFixture : IAsyncInitializer
             var userName = $"iggy_{Protocol.Http}_{i}";
             await Clients[Protocol.Http].CreateUser(userName, "iggy", UserStatus.Active);
 
-            var client = await IggyServerFixture.CreateClient(Protocol.Http, Protocol.Http);
+            var client = await IggyServerFixture.CreateClient(Protocol.Tcp, Protocol.Http);
             AdditionalClients.Add(client);
             var login = await client.LoginUser(userName, "iggy");
 
